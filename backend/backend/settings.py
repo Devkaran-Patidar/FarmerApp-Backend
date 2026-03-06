@@ -17,7 +17,11 @@ SECRET_KEY = 'django-insecure-yqtki2j9yv7&s+2n3ofzkmy09cd8emqnw5f6yo2aq&d$!%83%y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'farmerapp-backend-jhru.onrender.com',
+]
 
 # Application definition
 

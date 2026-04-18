@@ -20,6 +20,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
+    "http://localhost:5173",
     'farmerapp-backend-jhru.onrender.com',
 ]
 
@@ -32,21 +33,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'corsheaders',
     'rest_framework',
     'AuthApp',
     'ContactApp',
     'FarmerApp',
-    # 'BuyerApp',
+    'Chatboat',
+
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 #! ==================================================================================
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-import os
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # REST_FRAMEWORK = {
 
@@ -54,7 +56,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 #         'rest_framework.permissions.AllowAny',
 #     ),
 # }
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -77,6 +78,7 @@ AUTHENTICATION_BACKENDS = [
 # !==================================================================================
 
 MIDDLEWARE = [
+    
     'django.middleware.security.SecurityMiddleware',
 
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -109,29 +111,58 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 #! =======================================================================
-
+import os
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-import dj_database_url
-from dotenv import load_dotenv
-
-load_dotenv()
-
+# ? sql lite database settings for local development
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        # conn_max_age=500,
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
+# ? ====================================================================
+
+# ? postgresql settings for render.com
+# import dj_database_url
+from dotenv import load_dotenv
+load_dotenv()
+
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=os.environ.get('DATABASE_URL'),
+#         # conn_max_age=500,
+#     )
+# }
+
+
+#? ==============================================================================
+
+
+# cloudnary settings
+
+# DEFAULT_FILE_STORAGE= 	'cloudinary_storage.storage.MediaCloudinaryStorage'
+# CLOUDINARY = {
+#     'cloud_name': os.getenv('CLOUDINARY_CLOUD_NAME'),
+#     'api_key': os.getenv('CLOUDINARY_API_KEY'),
+#     'api_secret': os.getenv('CLOUDINARY_API_SECRET'),
+# }
+
+
+#?  ==============================================================================
+
+# todo   email settings for password reset
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'   
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  # Your email address
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Your email password or app password
 
 #! =======================================================================
 

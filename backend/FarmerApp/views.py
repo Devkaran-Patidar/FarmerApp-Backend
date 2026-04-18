@@ -1,3 +1,5 @@
+from pydoc import plain
+
 from django.shortcuts import render
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
@@ -5,6 +7,15 @@ from rest_framework.permissions import IsAuthenticated
 from .models import productModel
 from .serializer import productSerializer
 from .models import ProductImage
+from AuthApp.models import User
+
+from django.core.mail import send_mail
+from django.utils.html import strip_tags
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+# 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_product(request):
@@ -34,9 +45,126 @@ def add_product(request):
             context={"request": request}
         )
 
+        html_message = f"""
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="margin:0; padding:0; background-color:#f4f6f8; font-family:Arial, sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:20px;">
+    <tr>
+      <td align="center">
+
+        <!-- Card -->
+        <table width="100%" max-width="500px" cellpadding="0" cellspacing="0"
+          style="background:#ffffff; border-radius:12px; padding:30px; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
+
+          <!-- Logo / App Name -->
+          <tr>
+            <td align="center">
+            <img src="../media/Agromart_logo.png" alt="AgroMart Logo" width="80" style="margin-bottom:15px;">
+              <h1 style="color:#4CAF50; margin-bottom:10px;">AgroMart</h1>
+            </td>
+          </tr>
+
+          <!-- Title -->
+          <tr>
+            <td align="center">
+              <h2 style="color:#333;">Reset Your Password</h2>
+            </td>
+          </tr>
+
+          <!-- Message -->
+          <tr>
+            <td align="center">
+              <p style="color:#555; font-size:14px; line-height:1.6;">
+                We received a request to reset your password.
+                Click the button below to set a new password.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Button -->
+          <tr>
+            <td align="center">
+              <img src="{product.images.first().product_img.url}" alt="{product.name}" width="200" style="border-radius:8px; margin-top:20px;">
+                 style="display:inline-block; margin-top:20px; padding:12px 25px;
+                        background-color:#4CAF50; color:#ffffff;
+                        text-decoration:none; border-radius:6px;
+                        font-size:14px; font-weight:bold;">
+                Reset Password
+              </im>
+            </td>
+          </tr>
+
+          <!-- Expiry -->
+          <tr>
+            <td align="center">
+              <p style="margin-top:20px; font-size:12px; color:#888;">
+                This link will expire in 1 hour.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Fallback Link -->
+          <tr>
+            <td align="center">
+              <p style="font-size:12px; color:#999;">
+                If the button doesn’t work, copy and paste this link:
+              </p>
+              <p style="word-break:break-all; font-size:12px; color:#4CAF50;">
+                {product.name}
+                {product.description}
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center">
+              <p style="margin-top:25px; font-size:11px; color:#aaa;">
+                If you didn’t request this, you can safely ignore this email.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
+"""
+
+
+        plain_message = strip_tags(html_message)
+        try:
+            Emails = User.objects.filter(role="buyer").values_list("email", flat=True)
+            # for email in Emails:
+            send_mail(
+                    "Reset Your Password - AgroMart",
+                    plain_message,
+                    os.getenv('EMAIL_HOST_USER'),
+                    list([Emails]),
+                    html_message=html_message,
+                fail_silently=False,
+                )
+            
+        except Exception as e:
+            print("Error sending email:", e)
+
+
         return Response(final_serializer.data, status=201)
 
     return Response(serializer.errors, status=400)
+
+# ? =========================================================================================
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

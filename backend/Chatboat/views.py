@@ -26,49 +26,43 @@ def chat_api(request):
             "reply": "📞 Contact support: +91-9876543210"
         })
 
-    # 🔐 Login/Register
     elif "login" in msg or "register" in msg:
         return Response({
             "type": "text",
             "reply": "🔐 Login here: /login"
         })
 
-    # 💰 Discounts
     elif "discount" in msg:
         return Response({
             "type": "text",
             "reply": "💰 20% discount available!"
         })
 
-    # 🎁 Offers
     elif "offer" in msg:
         return Response({
             "type": "text",
             "reply": "🎁 Buy 1 Get 1 Free!"
         })
 
-    # 🚚 Delivery
     elif "delivery" in msg:
         return Response({
             "type": "text",
             "reply": "🚚 Delivered within 24 hours"
         })
 
-    # 💳 Payment
     elif "payment" in msg:
         return Response({
             "type": "text",
             "reply": "💳 UPI, Card, COD available"
         })
 
-    # 🛠 Services
     elif "service" in msg:
         return Response({
             "type": "text",
             "reply": "🛠 Farming, organic delivery"
         })
 
-    # 🤖 Ollama AI
+    # 🤖 AI fallback
     try:
         res = requests.post(OLLAMA_URL, json={
             "model": "llama3",
@@ -76,6 +70,7 @@ def chat_api(request):
             "stream": False
         })
 
+        res.raise_for_status()
         data = res.json()
 
         return Response({
@@ -83,8 +78,8 @@ def chat_api(request):
             "reply": data.get("response", "No reply")
         })
 
-    except:
+    except requests.exceptions.RequestException as e:
         return Response({
             "type": "text",
-            "reply": "⚠️ Ollama not running"
+            "reply": f"⚠️ Ollama error: {str(e)}"
         })

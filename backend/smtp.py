@@ -1,7 +1,6 @@
-from django.core.mail import EmailMultiAlternatives, send_mail
+from django.core.mail import send_mail
 from django.template.loader import render_to_string
 import os
-import django
 from dotenv import load_dotenv  
 load_dotenv()  # Load environment variables from .env file
 from django.utils.html import strip_tags
@@ -75,9 +74,10 @@ plain_message = strip_tags(html_content)
 Emails = ["patidardevkaran2@gmail.com"]
 
 send_mail(
+        subject,
         plain_message,
         from_email,
         list([Emails]),
-        html_message=html_content
+        html_message=html_content,
         fail_silently=False,
     )

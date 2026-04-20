@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from cloudinary.models import CloudinaryField
+
 
 class User(AbstractUser):
     ROLE_CHOICES = (
@@ -9,7 +11,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     phone_number = models.CharField(max_length=20, blank=True)
-    avatar = models.ImageField(upload_to="user_photos/",blank=True, null=True)
+    avatar = CloudinaryField('Image', folder="user_photos", blank=True, null=True)
 
     # avatar = models.ImageField()
 

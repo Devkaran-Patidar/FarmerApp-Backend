@@ -31,9 +31,13 @@ class productModel(models.Model):
     def __str__(self):
         return self.name
 
+
+# from cloudinary import models as cloudinary_models
+from cloudinary.models import CloudinaryField
 class ProductImage(models.Model):
     product = models.ForeignKey(productModel, on_delete=models.CASCADE, related_name="images")
-    product_img = models.ImageField(upload_to="products/")
+    # product_img = models.ImageField(upload_to="products/")
+    product_img = CloudinaryField('image', folder='products')
 
 # class Order(models.Model):
 #     product = models.ForeignKey(Product, on_delete=models.CASCADE)

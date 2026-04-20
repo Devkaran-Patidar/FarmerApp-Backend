@@ -118,26 +118,27 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 # ? sql lite database settings for local development
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # ? ====================================================================
 
 # ? postgresql settings for render.com
-# import dj_database_url
+
 from dotenv import load_dotenv
 load_dotenv()
+import dj_database_url
 
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default=os.environ.get('DATABASE_URL'),
-#         # conn_max_age=500,
-#     )
-# }
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        # conn_max_age=500,
+    )
+}
 
 
 #? ==============================================================================

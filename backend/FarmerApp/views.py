@@ -582,3 +582,53 @@ def product_details(request, product_id):
         "success": True,
         "product": serializer.data,
     })
+
+
+
+# top Buyers
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def top_buyers(request):
+    top_buyers = User.objects.filter(
+        role="buyer"
+    ).order_by('?')[:5]
+
+
+    data = []
+    for buyer in top_buyers:
+        print(buyer.username)
+        print(buyer.avatar)
+
+        data.append({
+            "id": buyer.id,
+            "username": buyer.username,
+            # "email": buyer.email,
+            "avatar": buyer.avatar.url if buyer.avatar else None,
+
+
+        })
+
+    return Response(data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def VisitStore(request, farmer_id):
+    try:
+        farmer = User.objects.get(id=farmer_id, role="farmer")
+    except User.DoesNotExist:
+        return Response({"error": "Farmer not found"}, status=404)
+
+    products = productModel.objects.filter(farmer_id=farmer)
+
+    serializer = productSerializer(products, many=True, context={"request": request})
+
+    return Response({
+        "success": True,
+        "farmer": {
+            "id": farmer.id,
+            "username": farmer.username,
+            "avatar": farmer.avatar.url if farmer.avatar else None,
+        },
+        "products": serializer.data
+    })

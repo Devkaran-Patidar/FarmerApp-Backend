@@ -21,5 +21,10 @@ urlpatterns = [
     path("orders/", views.FarmerOrdersView),
     path("order-item/<int:item_id>/deliver/", views.mark_as_delivered),
     path("earning/", views.FarmerEarning),
-    path("product/<int:product_id>/",views.product_details)
+    path("product/<int:product_id>/",views.product_details),
+
+    path("topbuyers/", views.top_buyers),
+    path("visitstore/<int:farmer_id>/", views.VisitStore),
+
+
 ]

@@ -117,7 +117,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# ? sql lite database settings for local development
+# # ? sql lite database settings for local development
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -131,6 +131,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 from dotenv import load_dotenv
 load_dotenv()
+
 import dj_database_url
 
 DATABASES = {

@@ -15,7 +15,7 @@ urlpatterns = [
     path("api/farmer/",include("FarmerApp.urls")),
     path("api/ai/",include("Chatboat.urls")),
 
-     path('api/token/', TokenObtainPairView.as_view()),
+    path('api/token/', TokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view()),
 ]
 # +static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

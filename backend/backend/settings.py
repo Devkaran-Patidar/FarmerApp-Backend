@@ -2,6 +2,7 @@
 AUTH_USER_MODEL = 'AuthApp.User'
 # AUTH_USER_MODEL = 'BuyerApp.user'
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -12,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-yqtki2j9yv7&s+2n3ofzkmy09cd8emqnw5f6yo2aq&d$!%83%y'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -20,7 +21,6 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    "http://localhost:5173",
     'farmerapp-backend-jhru.onrender.com',
 ]
 
@@ -47,8 +47,11 @@ INSTALLED_APPS = [
 
 #! ==================================================================================
 
-CORS_ORIGIN_ALLOW_ALL = True
-
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://agromart-ad69.onrender.com/"
+]
 
 # REST_FRAMEWORK = {
 
@@ -117,7 +120,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# # ? sql lite database settings for local development
+# ? sql lite database settings for local development
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -137,7 +140,8 @@ import dj_database_url
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
-        # conn_max_age=500,
+        conn_max_age=500,
+        ssl_require=True
     )
 }
 

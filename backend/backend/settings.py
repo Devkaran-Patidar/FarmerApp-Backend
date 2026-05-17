@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 # CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "https://agromart-ad69.onrender.com/"
+    "https://agromart-ad69.onrender.com"
 ]
 
 # REST_FRAMEWORK = {

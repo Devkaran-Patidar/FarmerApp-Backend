@@ -590,15 +590,12 @@ def product_details(request, product_id):
 @permission_classes([IsAuthenticated])
 def top_buyers(request):
     top_buyers = User.objects.filter(
-        role="buyer"
+        role="farmer",
     ).order_by('?')[:5]
 
 
     data = []
     for buyer in top_buyers:
-        print(buyer.username)
-        print(buyer.avatar)
-
         data.append({
             "id": buyer.id,
             "username": buyer.username,

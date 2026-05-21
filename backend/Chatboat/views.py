@@ -1,6 +1,5 @@
 # chatbot/views.py
 
-import requests
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
@@ -61,25 +60,9 @@ def chat_api(request):
             "type": "text",
             "reply": "🛠 Farming, organic delivery"
         })
-
-    # 🤖 AI fallback
-    try:
-        res = requests.post(OLLAMA_URL, json={
-            "model": "llama3",
-            "prompt": f"Reply shortly: {message}",
-            "stream": False
-        })
-
-        res.raise_for_status()
-        data = res.json()
-
+    else:
         return Response({
             "type": "text",
-            "reply": data.get("response", "No reply")
+            "reply": "🤖 I'm here to help! Ask me about support, offers, delivery, payments, or services."
         })
-
-    except requests.exceptions.RequestException as e:
-        return Response({
-            "type": "text",
-            "reply": f"⚠️ Ollama error: {str(e)}"
-        })
+    
